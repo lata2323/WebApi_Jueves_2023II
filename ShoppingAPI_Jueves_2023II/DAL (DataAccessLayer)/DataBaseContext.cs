@@ -21,8 +21,10 @@ namespace ShoppingAPI_Jueves_2023II.DAL__DataAccessLayer_
 
         #region DbSets
 
-        public DbSet<Country> Countries { get; set; }
+        public DbSet<Country> Countries { get; set; } //Esta línea me toma la clase Country y me la mappea en SQL SERVER para crear la tabla llamada COUNTRIES
                                   
         #endregion
+
+        //Por cada nueva entidad que yo creo, debo crearle su DbSet
     }
 }
