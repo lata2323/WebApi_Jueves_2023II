@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoppingAPI_Jueves_2023II.DAL__DataAccessLayer_.Entities;
 using ShoppingAPI_Jueves_2023II.Domain.Interfaces;
+using System.Xml.Linq;
 
 namespace ShoppingAPI_Jueves_2023II.Controllers
 {
@@ -51,6 +52,66 @@ namespace ShoppingAPI_Jueves_2023II.Controllers
                 }
                 return Conflict(ex.Message);
             }
+        }
+
+        //Aqui comienza uno de los endpoint
+        [HttpGet, ActionName("Get")]
+        [Route("GetById/{id}")] //Aqui concateno la URL inicial: URL = api/countries/get/{id}
+        public async Task<ActionResult<IEnumerable<Country>>> GetCountryByIdAsync(Guid id)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id es requerido!");
+            }
+
+            var country = await _countryService.GetCountryByIdAsync(id); //Aqui se esta llendo a la capa de domain para traerme la lista de paises
+
+            if (country == null) return NotFound(); //NotFound = 404 HTTP Status code
+
+            return Ok(country); //Ok = 200 HTTP Status Code
+        }
+        //aqui finaliza el endpoint
+
+        [HttpGet, ActionName("Get")]
+        [Route("GetByName/{name}")] //Aqui concateno la URL inicial: URL = api/countries/get/{id}
+        public async Task<ActionResult<IEnumerable<Country>>> GetCountryByNameAsync(string name)
+        {
+            if (name == null) return BadRequest("Nombre es requerido!");
+
+            var country = await _countryService.GetCountryByNameAsync(name); //Aqui se esta llendo a la capa de domain para traerme la lista de paises
+
+            if (country == null) return NotFound(); //NotFound = 404 HTTP Status code
+
+            return Ok(country); //Ok = 200 HTTP Status Code
+        }
+
+        [HttpPut, ActionName("Edit")] //HTTP Put es para modificar, actualizar lo que ya esta en la BD
+        [Route("Edit")]
+        public async Task<ActionResult> EditCountryAsync(Country country)
+        {
+            try
+            {
+                var editedCountry = await _countryService.EditCountryAsync(country);
+
+                return Ok(editedCountry); //Retorne un 200 y el objeto Country
+            }
+            catch (Exception ex)
+            {
+                return Conflict(ex.Message);
+            }
+        }
+
+        [HttpDelete, ActionName("Delete")] //HTTP Delete es para eliminar, actualizar lo que ya esta en la BD
+        [Route("Delete")]
+        public async Task<ActionResult> DeleteCountryAsync(Guid id)
+        {
+                if (id == null) return BadRequest("Id es requerido!");
+
+                var deleteCountry = await _countryService.DeleteCountryAsync(id);
+
+                if (deleteCountry == null) return NotFound("País no encontrado!");
+
+                return Ok(deleteCountry); //Retorne un 200 y el objeto Country
         }
     }
 }
