@@ -17,14 +17,20 @@ namespace ShoppingAPI_Jueves_2023II.DAL__DataAccessLayer_
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique(); //Aqui creo un índice del campo Name para la tabla Countries...
                                                                              //El indice es para que no exitan valores duplicados en en campo name
+
+            modelBuilder.Entity<State>().HasIndex("Name" , "CountryId").IsUnique(); //En el HasIndex se pone ("Name" , "CountryId") para no duplicar estados
+                                                                                    //por país
         }
 
+        //Por cada nueva entidad que yo creo, debo crearle su DbSet
         #region DbSets
 
         public DbSet<Country> Countries { get; set; } //Esta línea me toma la clase Country y me la mappea en SQL SERVER para crear la tabla llamada COUNTRIES
-                                  
+
+        public DbSet<State> States { get; set; }
+
         #endregion
 
-        //Por cada nueva entidad que yo creo, debo crearle su DbSet
+       
     }
 }
