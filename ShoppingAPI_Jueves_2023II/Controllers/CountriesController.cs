@@ -36,11 +36,13 @@ namespace ShoppingAPI_Jueves_2023II.Controllers
 
         [HttpPost, ActionName("Create")]
         [Route("Create")]
-        public async Task<ActionResult> CreateCountryAsync(Country country)
+        public async Task<ActionResult<Country>> CreateCountryAsync(Country country)
         {
             try
             {
                 var createdCountry = await _countryService.CreateCountryAsync(country);
+
+                if (createdCountry == null) return NotFound();
 
                 return Ok(createdCountry); //Retorne un 200 y el objeto Country
             }
@@ -87,7 +89,7 @@ namespace ShoppingAPI_Jueves_2023II.Controllers
 
         [HttpPut, ActionName("Edit")] //HTTP Put es para modificar, actualizar lo que ya esta en la BD
         [Route("Edit")]
-        public async Task<ActionResult> EditCountryAsync(Country country)
+        public async Task<ActionResult<Country>> EditCountryAsync(Country country)
         {
             try
             {
@@ -103,7 +105,7 @@ namespace ShoppingAPI_Jueves_2023II.Controllers
 
         [HttpDelete, ActionName("Delete")] //HTTP Delete es para eliminar, actualizar lo que ya esta en la BD
         [Route("Delete")]
-        public async Task<ActionResult> DeleteCountryAsync(Guid id)
+        public async Task<ActionResult<Country>> DeleteCountryAsync(Guid id)
         {
                 if (id == null) return BadRequest("Id es requerido!");
 
